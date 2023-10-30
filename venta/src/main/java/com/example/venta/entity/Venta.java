@@ -18,6 +18,12 @@ public class Venta {
     private String numero;
     private String codigo;
     private Integer clienteId;
+    private Double total;  // Monto total de la venta
+    private String estado;  // Estado actual de la venta (por ejemplo, "En proceso", "Completada", etc.)
+    private String tipoPago;  // Método de pago utilizado (por ejemplo, "Tarjeta de crédito", "Efectivo", etc.)
+    private String direccionEnvio;  // Dirección a la que se enviarán los productos, si aplica
+    private String observaciones;  // Campo para notas u observaciones adicionales sobre la venta
+
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 

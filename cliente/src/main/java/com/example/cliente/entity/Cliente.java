@@ -19,6 +19,9 @@ public class Cliente {
     private String telefono;
     private String apellidopaterno;
     private String apellidomaterno;
+    private String correoElectronico;      // Dirección de correo electrónico del cliente
+    private String direccion;               // Dirección física del cliente
+    private int edad;                       // Edad del cliente
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 }
