@@ -21,11 +21,11 @@ public class Producto {
     private Double costo;
     private Integer categoriaId;
     private double tasaIGV;
-    private String descripcion;        // Descripción detallada del producto
-    private String codigoBarras;       // Código de barras asociado al producto
-    private int cantidadStock;          // Cantidad de unidades en stock
-    private boolean disponible;         // Indica si el producto está disponible para la venta
-    private String proveedor;   
+    private String descripcion;
+    private String codigoBarras;
+    private int cantidadStock;
+    private String disponible;
+    private String proveedor;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 

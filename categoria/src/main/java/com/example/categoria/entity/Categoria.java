@@ -15,10 +15,9 @@ public class Categoria {
     private Integer id;
     private String titulo;
     private String descripccion;
-    private String imagenUrl;    // URL de la imagen asociada a la categoría
-    private int orden;           // Orden de visualización de la categoría
-    private String etiqueta;     // Etiqueta asociada a la categoría
-    private String color;        // Color asociado a la categoría (puede ser utilizado en la interfaz de usuario) 
+    private int orden;
+    private String etiqueta;
+    private String color;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 }
