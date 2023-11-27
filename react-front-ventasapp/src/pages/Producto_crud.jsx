@@ -1,11 +1,10 @@
 import axios from "axios";
-
-import { useState, useEffect } from "react";
-import AppLayout from '../component/admin/AppLayout';
-import { saveFile, deleteFile } from "../firebase/firebase";// Importa los métodos de Firebase
-import alumnoa from '../styles/add.css';
+import { useEffect, useState } from "react";
 import Modal from "../component/Modal";
 import SelectCategoria from "../component/Select_categoria";
+import AppLayout from '../component/admin/AppLayout';
+import { deleteFile, saveFile } from "../firebase/firebase"; // Importa los métodos de Firebase
+
 const Cproductos = () => {
     // token
     const token = localStorage.getItem("token");
@@ -272,20 +271,20 @@ const Cproductos = () => {
     }, []);
 
     const contenidoModal = (
-
-        <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-white   shadow-slate-400 shadow-inputamd">
+        <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-white shadow-md">
             <div className="flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <rect x="3" y="8" width="18" height="14" rx="2" ry="2" />
+  <path d="M7 8V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4" />
+  <polyline points="20 8 23 11 20 14" />
+  <line x1="12" y1="19" x2="12" y2="15" />
+</svg>
             </div>
-            <h2 className="text-2xl font-bold text-center">{cproductoEditado.id ? 'Editar Cproducto' : 'Crear Cproducto'}</h2>
-            <form onSubmit={cproductoEditado.id ? actualizarCproducto : crearCproducto}>
+            <h2 className="text-2xl font-bold text-center  text-white">{cproductoEditado.id ? 'Editar Cproducto' : 'Crear Producto'}</h2>
+            <form onSubmit={cproductoEditado.id ? actualizarCproducto : crearCproducto} className="max-w-xl mx-auto ">
                 <div className="mt-4">
-                    <div className="flex flex-wrap">
-                        <div className="w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                        <div className="mb-4  text-white">
                             <label className="block">Nombre</label>
                             <input
                                 value={cproductoEditado.nombre}
@@ -297,40 +296,10 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="Nombre"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
-                        <div className="mt-4">
-                            <label className="block">Foto</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(event) => setSelectedFile(event.target.files[0])}
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                            />
-                            <div className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
-                                {selectedFile ? (
-                                    <div className="flex items-center mt-2">
-                                        <img
-                                            src={URL.createObjectURL(selectedFile)}
-                                            alt="Nueva foto"
-                                            className="w-40 h-40 rounded mr-2"
-                                        />
-                                        <span className="text-gray-600">Nueva foto seleccionada</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center mt-2">
-                                        <img
-                                            src={cproductoEditado.foto}
-                                            alt="Foto actual"
-                                            className="w-40 h-40 rounded mr-2"
-                                        />
-                                        <span className="text-gray-600">Foto actual</span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="w-full">
+                        <div className="mb-4 text-white">
                             <label className="block">Costo</label>
                             <input
                                 value={cproductoEditado.costo}
@@ -342,12 +311,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="costo"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">tasaIGV</label>
                             <input
                                 value={cproductoEditado.tasaIGV}
@@ -359,11 +327,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="tasaIGV"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">descripcion</label>
                             <input
                                 value={cproductoEditado.descripcion}
@@ -375,11 +343,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="descripcion"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">codigoBarras</label>
                             <input
                                 value={cproductoEditado.codigoBarras}
@@ -391,11 +359,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="codigoBarras"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">cantidadStock</label>
                             <input
                                 value={cproductoEditado.cantidadStock}
@@ -407,11 +375,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="cantidadStock"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">disponible</label>
                             <input
                                 value={cproductoEditado.disponible}
@@ -423,11 +391,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="disponible"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full text-white">
                             <label className="block">proveedor</label>
                             <input
                                 value={cproductoEditado.proveedor}
@@ -439,13 +407,13 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="proveedor"
-                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
 
-                        <div className="ml-1">
-                            <label className="block">categoria</label>
+                        <div className="ml-1 text-black">
+                            <label className="block text-white">categoria</label>
                             <SelectCategoria onChange={(categoriaId) =>
                                 setCproductoEditado({
                                     ...cproductoEditado,
@@ -456,27 +424,55 @@ const Cproductos = () => {
                                 cproductoEditado={cproductoEditado}
                                 setCproductoEditado={setCproductoEditado}
                             />
-                        </div></div>
-
-                    <div className="flex  flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                        </div>
+                        
+                        
+                        </div>
+                        <div className="mb-4 text-white">
+                            <label className="block">Foto</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => setSelectedFile(event.target.files[0])}
+                                className="text-gray-500 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                            />
+                            <div className="text-gray-500 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white">
+                                {selectedFile ? (
+                                    <div className="flex items-center mt-2">
+                                        <img
+                                            src={URL.createObjectURL(selectedFile)}
+                                            alt="Nueva foto"
+                                            className="flex w-120 h-120 rounded"
+                                        />
+                                        
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center mt-2">
+                                        <img
+                                            src={cproductoEditado.foto}
+                                            alt="Foto actual"
+                                            className="w-120 h-120 rounded"
+                                        />
+                                        <span className="text-gray-600">Foto actual</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    <div className="flex items-center justify-end mt-6">
                         <button
                             type="button"
                             onClick={closeModal}
-                            className="ml-1 text-red-800  font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                            className="mr-2 text-red-800 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                         >
-                            Close
+                            cerrar
                         </button>
-
-                        <div
+                        <button
                             type="button"
-                            className="ml-1 text-blue-700 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                            className="text-blue-700 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                            onClick={cproductoEditado.id ? actualizarCproducto : crearCproducto}
                         >
-                            {cproductoEditado.id ? (
-                                <button onClick={actualizarCproducto} >Actualizar</button>
-                            ) : (
-                                <button onClick={crearCproducto} >Crear </button>
-                            )}
-                        </div>
+                            {cproductoEditado.id ? "Actualizar" : "Crear"}
+                        </button>
                     </div>
                 </div>
             </form>
@@ -494,20 +490,20 @@ const Cproductos = () => {
 
                 <div class="flex flex-wrap -mx-3">
                     <div class="flex-none w-full max-w-full px-3">
-                        <div class="flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                        <div class="flex flex-col min-w-0 mb-6 break-words bg-gray-800 border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                                <h6 class="dark:text-white font-bold">Lista De productos</h6>
+                                <h6 class="dark:text-white font-bold">LISTA DE PROPDUCTOs</h6>
                             </div>
                             <div class="flex-auto px-0 pt-0 pb-2">
                                 <div class="p-0 overflow-x-auto ps">
 
                                     <nav class=" flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" >
                                         <div class="flex  items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit ">
-                                            <nav className=" flex ">
+                                            <nav className=" flex">
 
                                                 <div class="mb-0 font-bold capitalize m-2">
                                                     <button type="button" className="" onClick={openModal}>
-                                                        <div className="text-white h-10 rounded-md hover:bg-orange-500 duration-300 p-2 text-center bg-orange-700">Agregar</div>
+                                                        <div className="text-white h-10 rounded-md hover:bg-green-500 duration-300 p-2 text-center bg-green-700">Agregar</div>
                                                     </button>
                                                 </div>
                                             </nav>
@@ -544,16 +540,31 @@ const Cproductos = () => {
                                     <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                                         <thead class="align-bottom">
                                             <tr>
-                                                <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">ID</th>
-                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Foto</th>
-                                                <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Nombre</th>
-                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">categoria</th>
-                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Costo</th>
-                                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Creado</th>
-                                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Actualizado</th>
-                                                <th class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400  "></th>
+                                                <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    ID
+                                                </th>
+                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Foto
+                                                </th>
+                                                <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Nombre
+                                                </th>
+                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Categoria
+                                                </th>
+                                                <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Costo
+                                                </th>
+                                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Creado
+                                                </th>
+                                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400">
+                                                    Actualizado
+                                                </th>
+                                                <th class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400"></th>
                                             </tr>
                                         </thead>
+
                                         <tbody>
                                             {currentItems.map((cproducto) => (
                                                 <tr key={cproducto.id}>
@@ -571,7 +582,7 @@ const Cproductos = () => {
                                                             <div>
                                                                 <img
                                                                     src={cproducto.foto}
-                                                                    className="inline-flex items-center justify-center mr-4 text-sm text-white transition-all duration-200 ease-in-out h-9 w-9 rounded-xl"
+                                                                    className="inline-flex items-center justify-center  text-sm text-white transition-all duration-200 ease-in-out h-36 w-36 rounded-xl"
                                                                     alt="user1"
                                                                 />                            </div>
                                                         </div>
@@ -633,22 +644,22 @@ const Cproductos = () => {
                                             <button
                                                 onClick={() => setCurrentPage(currentPage - 1)}
                                                 disabled={currentPage === 1}
-                                                className="text-green-500 font-bold inline-block rounded bg-primary  px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                                                className="text-blue-500 font-bold inline-block rounded bg-primary  px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
                                             ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                Anterior</button>
-                                            <span className=" p-2 font-semibold  text-blue-700  inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">{` ${currentPage} DE ${totalPages}`}</span>
+                                            </button>
+                                            <span className=" p-2 font-semibold  text-green-700  inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">{` ${currentPage} DE ${totalPages}`}</span>
                                             <button
                                                 onClick={() => setCurrentPage(currentPage + 1)}
                                                 disabled={currentItems.length < itemsPerPage || !hasNextPage()}
-                                                className="text-blue-700 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                                                className="text-red-700 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
 
                                             ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                Siguiente</button>
+                                            </button>
                                         </div>
                                         <div>
                                         </div>
