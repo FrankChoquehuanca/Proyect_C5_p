@@ -1,6 +1,13 @@
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoePrints } from '@fortawesome/free-solid-svg-icons';
+import backgroundImage from "../../public/images/backgraund.jpg"; // Asegúrate de proporcionar la ruta correcta
+import backgroundLogo from "../../public/images/logo1.jpg";
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+library.add(faShoePrints);
 
 const CustomLogin = () => {
   const navigate = useNavigate();
@@ -10,6 +17,8 @@ const CustomLogin = () => {
   const [mostrarCamposRegistro, setMostrarCamposRegistro] = useState(false);
   const [mostrarContrasenas, setMostrarContrasenas] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [mensajeConfirmacion, setMensajeConfirmacion] = useState(""); // Agregar esta línea
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,9 +34,23 @@ const CustomLogin = () => {
 
       localStorage.setItem("token", token);
 
+      setMensajeConfirmacion("Inicio de sesión exitoso. Redirigiendo a la página de inicio...");
+    setTimeout(() => {
+      setMensajeConfirmacion("");
       navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
+    }, 3000); // El mensaje se limpiará después de 3 segundos
+  } catch (error) {
+    console.error(error);
+
+    if (error.response && error.response.status === 401) {
+      setError("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
+    } else {
+      setError("Contraseña o correo electronico incorrecto, intente nuevamente");
+    }
+
+    setTimeout(() => {
+      setError("");
+    }, 3000); // El mensaje de error se limpiará después de 3 segundos
     }
   };
 
@@ -73,25 +96,42 @@ const CustomLogin = () => {
   };
 
   return (
-    <div className="py-60 h-screen"
-      style={{
-        background: "linear-gradient(115deg, #0b3968, #0b3a6852)", // Puedes ajustar los colores del degradado
-      }}
+    
+    <div
+    className="flex items-center justify-center"
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      minHeight: "100vh",
+    }}
     >
-      <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
-        <div
-          className="hidden lg:block lg:w-1/2 bg-cover"
-          style={{
-            backgroundImage:
-              "url('https://img.freepik.com/fotos-premium/primer-plano-fondo-abstracto-azul-dorado-patron-diagonal-generativo-ai_900833-22852.jpg')",
-          }}
-        ></div>
-        <div className="w-full p-8 lg:w-1/2">
-          <h2 className="text-2xl font-semibold text-gray-700 text-center">
-            Marca
-          </h2>
-          <p className="text-xl text-gray-600 text-center">¡Bienvenido de nuevo!</p>
-
+      <div className="container mx-auto">
+      <div
+  className="flex bg-gray-800 rounded-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl shadow-lg border border-yellow-500"
+  style={{
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Sombra opcional, ajusta según sea necesario
+  }}
+>
+      <div
+  className="hidden lg:block lg:w-1/2 bg-cover"
+  style={{
+    backgroundImage: `url(${backgroundLogo})`,
+    backgroundSize: "cover", // O ajusta según sea necesario
+  }}
+></div>
+        <div className="w-full p-16 lg:w-1/2 border-gray-800">
+          <p className="text-xl text-white border-b border-white text-center">INGRESA A TU CUENTA</p>
+          {mensajeConfirmacion && (
+    <div className="bg-green-200 text-green-800 p-2 rounded mt-4 text-center">
+      {mensajeConfirmacion}
+    </div>
+  )}
+  {error && (
+  <div className="bg-red-200 text-red-800 p-2 rounded mt-4 text-center">
+    {error}
+  </div>
+)}
           {mostrarCamposRegistro ? (
             <form onSubmit={handleRegistro} className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -147,7 +187,7 @@ const CustomLogin = () => {
                   checked={mostrarContrasenas}
                   onChange={toggleMostrarContrasenas}
                 />
-                <span className="text-gray-700 cursor-pointer text-sm">
+                <span className="text-white cursor-pointer text-sm">
                   Mostrar Contraseña
                 </span>
               </label>
@@ -159,7 +199,7 @@ const CustomLogin = () => {
           ) : (
             <form onSubmit={handleLogin} className="mt-4">
               <div className="mt-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-white text-sm font-bold mb-2">
                   Correo Electrónico
                 </label>
                 <input
@@ -167,10 +207,11 @@ const CustomLogin = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required // Campo requerido
                 />
               </div>
               <div className="mt-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-white text-sm font-bold mb-2">
                   Contraseña
                 </label>
                 <input
@@ -178,6 +219,7 @@ const CustomLogin = () => {
                   type={mostrarContrasenas ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required // Campo requerido
                 />
               </div>
 
@@ -189,12 +231,12 @@ const CustomLogin = () => {
                   checked={mostrarContrasenas}
                   onChange={toggleMostrarContrasenas}
                 />
-                <label htmlFor="mostrarContrasenas" className="text-gray-700 cursor-pointer text-sm">
+                <label htmlFor="mostrarContrasenas" className="text-white cursor-pointer text-sm">
                   Mostrar Contraseñas
                 </label>
               </div>
               <div className="mt-8">
-                <button className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">
+                <button className="bg-gray-600 text-white font-bold py-2 px-4 w-full rounded hover:bg-yellow-700">
                   Iniciar Sesión
                 </button>
               </div>
@@ -204,15 +246,16 @@ const CustomLogin = () => {
           <div className="mt-4 flex items-center justify-between">
             <span className="border-b w-1/5 md:w-1/4"></span>
             <button
-              className="text-xs text-gray-500 uppercase cursor-pointer"
+              className="text-xs text-white uppercase cursor-pointer"
               onClick={mostrarCamposRegistro ? irAInicioSesion : irARegistro}
             >
-              {mostrarCamposRegistro ? "Iniciar Sesión" : "o registrarse"}
+              {mostrarCamposRegistro ? "Iniciar Sesión" : "Registrarse"}
             </button>
             <span className="border-b w-1/5 md:w-1/4"></span>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
