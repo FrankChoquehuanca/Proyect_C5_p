@@ -7,6 +7,9 @@ import Modal from "../component/Modal";
 import AppLayout from '../component/admin/AppLayout';
 import LisClienteIns from "../component/cliente_list_venta";
 import ListaProductoIns from "../component/producto_list_venta";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import backgroundTabla from "../public/images/tablo.jpg";
 
 const Ventas = () => {
 
@@ -19,6 +22,7 @@ const Ventas = () => {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredVentas, setFilteredVentas] = useState([]);
+  const [detallesData, setDetallesData] = useState([]);
 
   const getCurrentItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -64,7 +68,7 @@ const Ventas = () => {
 
   const NombreProductoInscripcion = ({ productoId }) => {
     const [nombreProducto, setNombreProducto] = useState('');
-  
+
     const [costoProducto, setCostoProducto] = useState('');
 
     useEffect(() => {
@@ -77,7 +81,7 @@ const Ventas = () => {
         .then((response) => {
           const producto = response.data;
           setNombreProducto(producto.nombre);
-   
+
           setCostoProducto(producto.costo);
         })
         .catch((error) => {
@@ -88,17 +92,18 @@ const Ventas = () => {
     }, [productoId]);
 
     return (
-      <>
-
-        <div class="flex-initial px-2 py-1" key={detalle.id}>
-          <div className="">
-          <h6 class="mb-0 text-sm leading-normal dark:text-white">S/. {costoProducto}</h6>
-           <h6 class="mb-0 text-sm leading-normal dark:text-white">{nombreProducto}</h6>
-          </div>
-
-        </div>
-      </>
+      <div className="flex-initial px-2 py-1" key={detalle.id}>
+         <h6 className="mb-0 text-sm leading-normal text-gray-400 dark:text-gray-400 font-bold">
+            {nombreProducto}
+          </h6>
+          <h6 className="mb-2 text-sm font-semibold text-gray-500 dark:text-white">
+            S/. <span className="font-bold">{costoProducto}</span>
+          </h6>
+         
+      
+      </div>
     );
+    
   };
 
 
@@ -116,10 +121,10 @@ const Ventas = () => {
           const serieCompleto = `${venta.serie}`;
           return serieCompleto.toLowerCase().includes(searchTerm.toLowerCase());
         });
-  
+
         // Filtrar las ventas que tienen un clienteId válido
         const ventasConClienteId = filtered.filter((venta) => venta.clienteId !== null);
-  
+
         // Obtener los nombres de los clientes para cada venta
         const clientePromises = ventasConClienteId.map((venta) => {
           return axios.get(`${API_URL}/cliente/${venta.clienteId}`, {
@@ -128,7 +133,7 @@ const Ventas = () => {
             },
           });
         });
-  
+
         // Realizar las solicitudes en paralelo usando Promise.all
         Promise.all(clientePromises)
           .then((responses) => {
@@ -138,7 +143,7 @@ const Ventas = () => {
               const apellidopaternoCliente = responses[index].data.apellidopaterno;
               return { ...venta, nombreCliente, apellidopaternoCliente };
             });
-  
+
             setFilteredVentas(ventasConClientes);
           })
           .catch((error) => {
@@ -166,7 +171,7 @@ const Ventas = () => {
       !Array.isArray(ventaEditado.detalle) ||
       ventaEditado.detalle.length === 0 ||
       ventaEditado.detalle.some(
-        (detalle) => !detalle.productoId 
+        (detalle) => !detalle.productoId
         // ||detalle.costo === ""
       )
     ) {
@@ -184,7 +189,7 @@ const Ventas = () => {
         clienteId: ventaEditado.clienteId,
         detalle: ventaEditado.detalle.map((detalle) => ({
           productoId: detalle.productoId,
-         // costo: detalle.costo,
+          // costo: detalle.costo,
         })),
       };
 
@@ -292,15 +297,185 @@ const Ventas = () => {
   }
 
 
+  const generarPDFs = async (ventaId) => {
+    // Buscar la venta por ID
+    const ventaSeleccionada = ventas.find((ventaprod) => ventaprod.id === ventaId);
+
+    if (!ventaSeleccionada) {
+      console.log(`No se encontró ninguna venta con ID ${ventaId}`);
+      return;
+    }
+
+    const doc = new jsPDF();
+    let totalCosto = 0; // Inicializar variable para sumar el costo de los productos
+
+    // Agregar el encabezado con fondo de color plomo
+    doc.setFillColor(169, 169, 169); // Color plomo en RGB
+    doc.rect(0, 0, 210, 30, 'F'); // Dibuja un rectángulo lleno de color
+
+    // Agregar el título de la tienda al encabezado
+    doc.setFontSize(22);
+    doc.setTextColor(0, 0, 0); // Color negro para el texto
+    doc.text('Importaciones Moda Europea LION MADRID', 105, 20, null, null, 'center');
+
+    doc.text('Factura:', 20, 40);
+    doc.text(`${ventaSeleccionada.serie}`, 180, 40, null, null, 'right');
+    doc.line(20, 43, 180, 43);
+    doc.text('Fecha de creación: ', 20, 50);
+
+    // Formatear la fecha para que solo muestre el día, el mes y el año
+    const fecha = new Date(ventaSeleccionada.created_at);
+    const fechaFormateada = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+
+    doc.text(fechaFormateada, 180, 50, null, null, 'right');
+    doc.line(20, 53, 180, 53);
+
+    let y = 60; // Inicializar la posición y para el primer producto
+
+    for (const detalleItem of ventaSeleccionada.detalle) {
+      try {
+        const productoResponse = await axios.get(`${API_URL}/producto/${detalleItem.productoId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const nombreProducto = productoResponse.data.nombre;
+        const costoProducto = productoResponse.data.costo;
+        const cantidad = ventaSeleccionada.numero; // Asegúrate de que detalleItem tiene una propiedad NUMERO
+
+        // Sumar el costo del producto a la variable totalCosto
+        totalCosto += costoProducto * cantidad;
+
+        doc.text('Producto: ', 20, y);
+        doc.text(`${nombreProducto}`, 180, y, null, null, 'right');
+        doc.line(20, y + 3, 180, y + 3);
+        doc.text('Precio:  ', 20, y + 10);
+        doc.text(`S/.${costoProducto}`, 180, y + 10, null, null, 'right');
+        doc.line(20, y + 13, 180, y + 13);
+
+        y += 20; // Incrementar la posición y para el siguiente producto
+      } catch (error) {
+        console.log(`Error al obtener información del producto con ID ${detalleItem.productoId}`);
+      }
+    }
+
+    const igv = totalCosto * 0.18; // IGV es el 18% del precio
+    const total = totalCosto;
+    const subtotal = total - igv;
+
+    doc.text('cantidad: ', 20, y);
+    doc.text(`${ventaSeleccionada.numero}`, 180, y, null, null, 'right');
+    doc.line(20, y + 3, 180, y + 3);
+    doc.text('Cliente ID: ', 20, y + 10);
+    doc.text(`${ventaSeleccionada.clienteId}`, 180, y + 10, null, null, 'right');
+    doc.line(20, y + 13, 180, y + 13);
+    doc.text('Subtotal:  ', 20, y + 20);
+    doc.text(`S/.${subtotal.toFixed(2)}`, 180, y + 20, null, null, 'right');
+    doc.line(20, y + 23, 180, y + 23);
+    doc.text('IGV (18%):  ', 20, y + 30);
+    doc.text(`S/.${igv.toFixed(2)}`, 180, y + 30, null, null, 'right');
+    doc.line(20, y + 33, 180, y + 33);
+    doc.text('Total:  ', 20, y + 40);
+    doc.text(`S/.${total.toFixed(2)}`, 180, y + 40, null, null, 'right');
+
+    // Agregar el pie de página
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Color negro para el texto
+    doc.text('Gracias por comprar en la MADRID', 105, 285, null, null, 'center');
+
+    // Nombre del archivo PDF con el ID de la venta
+    const fileName = `venta_${ventaSeleccionada.id}.pdf`;
+    doc.save(fileName);
+  };
+
+
+
+
+
+
+
+
+  const generarPDF = async () => {
+    const doc = new jsPDF();
+    const headers = ['ID', 'Serie', 'Numero', 'Codigo', 'ClienteId', 'Producto', 'Creado', 'Actualizado'];
+    const data = [];
+
+    // Hacer un bucle a través de las ventas
+    for (const ventaprod of ventas) {
+      const detalleData = [];
+
+      // Obtener información detallada para cada producto en el detalle
+      for (const detalleItem of ventaprod.detalle) {
+        try {
+          const productoResponse = await axios.get(`${API_URL}/producto/${detalleItem.productoId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const nombreProducto = productoResponse.data.nombre;
+          const costoProducto = productoResponse.data.costo;
+
+          // Agregar información detallada al array
+          detalleData.push(`${nombreProducto} (S/. ${costoProducto})`);
+        } catch (error) {
+          console.log(`Error al obtener información del producto con ID ${detalleItem.productoId}`);
+          detalleData.push(`Producto ID: ${detalleItem.productoId}`);
+        }
+      }
+
+      // Agregar la fila de datos para esta venta
+      data.push([
+        ventaprod.id,
+        ventaprod.serie,
+        ventaprod.numero,
+        ventaprod.codigo,
+        ventaprod.clienteId,
+        detalleData.join(', '),
+        ventaprod.created_at,
+        ventaprod.updated_at,
+      ]);
+    }
+
+    const tableStyles = {
+      startY: 20,
+      headStyles: {
+        fillColor: '#FFA545',
+        textColor: '#FFFFFF',
+        fontStyle: 'bold',
+      },
+      bodyStyles: {
+        textcolor: '#444'
+      },
+      alternateRowStyles: {
+        fillColor: '#Bef5f5f'
+      }
+    };
+
+    doc.autoTable({
+      head: [headers],
+      body: data,
+      ...tableStyles,
+    });
+
+    doc.save('ventaprods.pdf');
+  };
+
+
+
+
+
+
+
   const contenidoModal = (
 
 
-    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40 shadow-slate-400 shadow-md">
+    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40   shadow-slate-400 shadow-md"
+    >
       <div className="flex justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 1v22m0-12a9 9 0 110-18 9 9 0 010 18zm-7-9h14" />
         </svg>
       </div>
       <h2 className="text-2xl font-bold text-center">{ventaEditado.id ? 'Editar Venta' : 'Crear Venta'}</h2>
@@ -368,24 +543,22 @@ const Ventas = () => {
             />
           </div>
           <div className="ml-1 pt-2">
-            <label className="block">Producto</label>
-            <ListaProductoIns
-              onChange={(productoId, checked) => {
-                const updatedDetalle = ventaEditado.detalle.map((detalle) => {
-                  if (detalle.productoId === productoId) {
-                    return { ...detalle };
-                  }
-                  return detalle;
-                });
-                if (!updatedDetalle.some((detalle) => detalle.productoId === productoId)) {
-                  updatedDetalle.push({ productoId: productoId });
-                }
-                setVentaEditado({ ...ventaEditado, detalle: updatedDetalle });
-              }}
-              selectedProductoId={ventaEditado.detalle.map((detalle) => detalle.productoId)}
-              VentaEditado={ventaEditado}
-              setVentaEditado={setVentaEditado}
-            />
+            <label className="block  text-gray-500">Seleccionar productos:</label>
+            <div className="productos-container">
+              <ListaProductoIns
+                onChange={(productoId, checked) => {
+                  const updatedDetalle = checked
+                    ? [...ventaEditado.detalle, { productoId, selected: true }]
+                    : ventaEditado.detalle.filter((detalle) => detalle.productoId !== productoId);
+
+                  setVentaEditado((prevVentaEditado) => ({
+                    ...prevVentaEditado,
+                    detalle: updatedDetalle,
+                  }));
+                }}
+                selectedProductoIds={ventaEditado.detalle.map((detalle) => detalle.productoId)}
+              />
+            </div>
           </div>
 
           <div className="flex  flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
@@ -424,7 +597,12 @@ const Ventas = () => {
 
         <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
-            <div class=" flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+            <div class=" flex flex-col min-w-0 mb-6 break-words border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+              style={{
+                backgroundImage: `url(${backgroundTabla})`,
+                backgroundSize: "cover", // O ajusta según sea necesario
+              }}
+            >
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <h6 class="dark:text-white font-bold">Lista De Ventas</h6>
               </div>
@@ -434,7 +612,15 @@ const Ventas = () => {
                   <nav class=" flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" >
                     <div class="flex  items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit ">
                       <nav className=" flex ">
-                       
+
+                        <div class="mb-0 font-bold capitalize m-2">
+                          {/* <button className="" onClick={() => setModalIsOpen(true)} >
+                          <div className=" text-white h-10 rounded-md hover:bg-orange-500 duration-300  p-2 text-center bg-orange-700">Agregar</div>
+                        </button> */}
+                          <button type="button" className="" onClick={generarPDF}>
+                            <div className="text-white h-10 rounded-md hover:bg-orange-500 duration-300 p-2 text-center bg-orange-700">pdf</div>
+                          </button>
+                        </div>
                         <div class="mb-0 font-bold capitalize m-2">
                           {/* <button className="" onClick={() => setModalIsOpen(true)} >
                           <div className=" text-white h-10 rounded-md hover:bg-orange-500 duration-300  p-2 text-center bg-orange-700">Agregar</div>
@@ -443,6 +629,7 @@ const Ventas = () => {
                             <div className="text-white h-10 rounded-md hover:bg-orange-500 duration-300 p-2 text-center bg-orange-700">Agregar</div>
                           </button>
                         </div>
+
                       </nav>
                       <div class="flex   items-center mt-2 grow sm:mt-0 sm:mr-16 md:mr-0 lg:flex  lg:basis-auto">
                         <div class="flex items-center md:ml-auto md:pr-4">
@@ -480,9 +667,9 @@ const Ventas = () => {
                         <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">ID</th>
                         <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">serie</th>
                         <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Numero</th>
-                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Descripccion</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Codigo</th>
                         <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Cliente</th>
-                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">producto</th>
+                        <th class="px-6 py-3 pl-2 font-bold  uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs text-center border-b-solid tracking-none whitespace-nowrap text-slate-400 ">producto</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Creado</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 ">Actualizado</th>
                         <th class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400 opacity-70"></th>
@@ -537,22 +724,40 @@ const Ventas = () => {
                             </div>
                           </td>
 
-                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            {venta.detalle.map((detalle) => (
-                              <div class="flex px-2 py-1" key={detalle.id}>
-                                <div className="w-28">
-                                  <NombreProductoInscripcion productoId={detalle.productoId} />
+                          <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            {venta.detalle.length <= 2 ? (
+                              // Si hay dos o menos productos, mostrar en una columna
+                              venta.detalle.map((detalle) => (
+                                <div className="flex px-2 py-1" key={detalle.id}>
+                                  <div className="w-28">
+                                    <NombreProductoInscripcion productoId={detalle.productoId} />
+                                  </div>
+                                  <div className="flex pl-10 flex-col justify-center">
+                                    <p className="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                                      {/* Contenido del producto */}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div class="flex pl-10 flex-col justify-center">
-                                  <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
-                                    {/* <span className={detalle.status === 0 ? 'bg-red-600 rounded p-1 text-white' : 'bg-green-500 rounded p-1 text-white'}>
-                                      {detalle.status === 0 ? 'FALTO' : 'ASISTIO'}
-                                    </span> */}
-                                  </p>
-                                </div>
+                              ))
+                            ) : (
+                              // Si hay más de dos productos, mostrar en dos columnas
+                              <div className="grid grid-cols-2 gap-4">
+                                {venta.detalle.map((detalle) => (
+                                  <div className="flex px-2 py-1" key={detalle.id}>
+                                    <div className="w-0">
+                                      <NombreProductoInscripcion productoId={detalle.productoId} />
+                                    </div>
+                                    <div className="flex pl-10 flex-col justify-center">
+                                      <p className="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                                        {/* Contenido del producto */}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            )}
                           </td>
+
 
                           <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                             <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{venta.created_at}</span>
@@ -575,6 +780,15 @@ const Ventas = () => {
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                                 </svg>
                               </button>
+                            </a>
+                            <a class="btns inline-block px-4 py-3 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-150 hover:scale-102 active:opacity-85 bg-x-25 ">
+                              <button onClick={() => generarPDFs(venta.id)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 text-orange-400">
+                                  {/* Nuevo código SVG para el icono de PDF o boleta */}
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.5 1h-9C5.67157 1 5 1.67157 5 2.5V21.5C5 22.3284 5.67157 23 6.5 23H17.5C18.3284 23 19 22.3284 19 21.5V8.41421C19 8.16421 18.9075 7.92744 18.7498 7.74981L14.2502 3.25019C14.0726 3.09246 13.8358 3 13.5858 3H11.5C10.6716 3 10 3.67157 10 4.5V8M12 14L15 11M15 11L12 8M15 11L18 8" />
+                                </svg>
+                              </button>
+
                             </a>
                             {/* </div> */}
                           </td>
@@ -609,7 +823,7 @@ const Ventas = () => {
 
 
                     </div>
-                   
+
 
                   </div>
                 </div>

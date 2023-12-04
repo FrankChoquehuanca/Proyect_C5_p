@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import backgroundNavar from "../../public/images/navar.jpg";
 
 
 
@@ -47,8 +47,14 @@ const SSidenav = () => {
                 </svg>
             </span>
 
-            <aside className={` fixed  normal-case  bg-[#ffffff] text-xs  leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]          w-60 ease-nav-brand hover:overflow-y-auto  overflow-hidden z-990  inset-y-0 my-4 ml-4 block   flex-wrap items-center justify-between  rounded-2xl border-0  p-0 antialiased xl:left-0 xl:translate-x-0 ${isSidebarOpen ? "" : "hidden"
+            <aside className={` fixed  normal-case text-xs  leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]          w-60 ease-nav-brand hover:overflow-y-auto  overflow-hidden z-990  inset-y-0 my-4 ml-4 block   flex-wrap items-center justify-between  rounded-2xl border-0  p-0 antialiased xl:left-0 xl:translate-x-0 ${isSidebarOpen ? "" : "hidden"
                 }`}
+                style={{
+                    backgroundImage: `url(${backgroundNavar})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    minHeight: "100vh",
+                  }}
             >
 
                 <div class="h-20 ">
@@ -156,18 +162,7 @@ const SSidenav = () => {
                                     <span class="ml-1   duration-300 opacity-100 pointer-events-none ease-soft">Clientes</span>
                                 </a>
                             </li>
-                            <li class="mt-1 w-full">
-                                <a href="/ventadeta" class="mt-4 hover:text-[#000000]  bg-[#000000]  pb-2 pt-2 text-xs  normal-case leading-normal shadow-[0_4px_9px_-4px_#3b71ca]  duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]  py-2 shadow-soft-xl  ease-nav-brand my-0  flex items-center whitespace-nowrap rounded-lg hover:bg-white px-4 font-semibold text-white" >
-                                    <div class="bg-gradient-to-r from-black hover:text-slate-500 hover:to-yellow-600 shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
-                                    </svg>
-
-
-                                    </div>
-                                    <span class="ml-1   duration-300 opacity-100 pointer-events-none ease-soft">Ventadetas</span>
-                                </a>
-                            </li>
+                         
                         </div>
 
                         <hr class="h-px mt-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />

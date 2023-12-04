@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.example.venta.dto.Cliente;
 import com.example.venta.entity.Venta;
 import com.example.venta.service.VentaService;

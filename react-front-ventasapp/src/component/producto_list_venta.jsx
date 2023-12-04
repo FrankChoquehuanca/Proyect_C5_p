@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
-function ListaProductoIns({ onChange }) {
+
+function ListaProductoIns({ onChange, selectedProductoIds }) {
   const [productos, setProductos] = useState([]);
-  const [selectedProductoId, setSelectedProductoId] = useState('');
- // token
- const token = localStorage.getItem("token");
- // end token
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     obtenerProductos();
   }, []);
 
   const obtenerProductos = () => {
     axios
-      .get(`${API_URL}/producto`,{
+      .get(`${API_URL}/producto`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -25,21 +24,30 @@ function ListaProductoIns({ onChange }) {
         console.log(error);
       });
   };
-  const handleSeleccionarProducto = (event) => {
-    const productoId = event.target.value;
-    setSelectedProductoId(productoId);
-    onChange(productoId);
+
+  const handleSeleccionarProducto = (productoId) => {
+    const isSelected = selectedProductoIds.includes(productoId);
+    onChange(productoId, !isSelected);
   };
 
   return (
-    <select value={selectedProductoId} onChange={handleSeleccionarProducto}>
-       <option value="">Seleccionar producto</option>
-      {productos.map((producto) => (
-        <option key={producto.id} value={producto.id}>
-          {producto.nombre}  - S/. {producto.costo} 
-        </option>
-      ))}
-    </select>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {productos.map((producto) => (
+      <div key={producto.id} className="flex items-center">
+        <input
+          type="checkbox"
+          id={`producto-${producto.id}`}
+          value={producto.id}
+          checked={selectedProductoIds.includes(producto.id)}
+          onChange={() => handleSeleccionarProducto(producto.id)}
+          className="mr-2 rounded-full bg-yellow-600"
+        />
+        <label htmlFor={`producto-${producto.id}`}>
+          <span>{producto.nombre}</span> - S/. {producto.costo}
+        </label>
+      </div>
+    ))}
+  </div>
   );
 }
 

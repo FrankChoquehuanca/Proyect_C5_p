@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoePrints } from '@fortawesome/free-solid-svg-icons';
-import backgroundImage from "../../public/images/backgraund.jpg"; // Asegúrate de proporcionar la ruta correcta
-import backgroundLogo from "../../public/images/logo1.jpg";
+import backgroundImage from "../../public/images/fondo.jpg"; // Asegúrate de proporcionar la ruta correcta
+import backgroundLogo from "../../public/images/logo1.jpeg";
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 library.add(faShoePrints);
 

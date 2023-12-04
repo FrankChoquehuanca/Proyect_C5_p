@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Modal from "../component/Modal";
 import AppLayout from "../component/admin/AppLayout";
+import backgroundTabla from "../public/images/tablo.jpg";
 const ClienteProds = () => {
     // token
     const token = localStorage.getItem("token");
@@ -222,13 +223,11 @@ const ClienteProds = () => {
   const contenidoModal = (
 
 
-    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-slate-400 shadow-md">
+    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-white shadow-md">
       <div className="flex justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path d="M12 14l9-5-9-5-9 5 9 5z" />
-          <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-        </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 10a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+</svg>
       </div>
       <h2 className="text-2xl font-bold text-center">{clienteProdEditado.id ? 'Editar ClienteProd' : 'Crear ClienteProd'}</h2>
       <form onSubmit={clienteProdEditado.id ? actualizarClienteProd : crearClienteProd}>
@@ -394,7 +393,11 @@ const ClienteProds = () => {
 
         <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
-            <div class=" flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+            <div class=" flex flex-col min-w-0 mb-6 break-words border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+            style={{
+              backgroundImage: `url(${backgroundTabla})`,
+              backgroundSize: "cover", // O ajusta según sea necesario
+            }}>
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <h6 class="dark:text-white font-bold">Lista De ClienteProd</h6>
               </div>
