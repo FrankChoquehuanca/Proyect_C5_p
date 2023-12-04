@@ -1,10 +1,10 @@
 import axios from "axios";
+
 import { useEffect, useState } from "react";
 import Modal from "../component/Modal";
 import SelectCategoria from "../component/Select_categoria";
 import AppLayout from '../component/admin/AppLayout';
 import { deleteFile, saveFile } from "../firebase/firebase"; // Importa los métodos de Firebase
-
 const Cproductos = () => {
     // token
     const token = localStorage.getItem("token");
@@ -271,20 +271,20 @@ const Cproductos = () => {
     }, []);
 
     const contenidoModal = (
-        <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-white shadow-md">
+
+        <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-slate-400 shadow-md">
             <div className="flex justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-  <rect x="3" y="8" width="18" height="14" rx="2" ry="2" />
-  <path d="M7 8V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4" />
-  <polyline points="20 8 23 11 20 14" />
-  <line x1="12" y1="19" x2="12" y2="15" />
-</svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                </svg>
             </div>
-            <h2 className="text-2xl font-bold text-center  text-white">{cproductoEditado.id ? 'Editar Cproducto' : 'Crear Producto'}</h2>
-            <form onSubmit={cproductoEditado.id ? actualizarCproducto : crearCproducto} className="max-w-xl mx-auto ">
+            <h2 className="text-2xl font-bold text-center">{cproductoEditado.id ? 'Editar Cproducto' : 'Crear Cproducto'}</h2>
+            <form onSubmit={cproductoEditado.id ? actualizarCproducto : crearCproducto} className="max-w-xl mx-auto">
                 <div className="mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                        <div className="mb-4  text-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="mb-4">
                             <label className="block">Nombre</label>
                             <input
                                 value={cproductoEditado.nombre}
@@ -296,10 +296,10 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="Nombre"
-                                className="text-black w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
-                        <div className="mb-4 text-white">
+                        <div className="mb-4">
                             <label className="block">Costo</label>
                             <input
                                 value={cproductoEditado.costo}
@@ -311,11 +311,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="costo"
-                                className="text-black w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">tasaIGV</label>
                             <input
                                 value={cproductoEditado.tasaIGV}
@@ -327,11 +327,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="tasaIGV"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">descripcion</label>
                             <input
                                 value={cproductoEditado.descripcion}
@@ -343,11 +343,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="descripcion"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">codigoBarras</label>
                             <input
                                 value={cproductoEditado.codigoBarras}
@@ -359,11 +359,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="codigoBarras"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">cantidadStock</label>
                             <input
                                 value={cproductoEditado.cantidadStock}
@@ -375,11 +375,11 @@ const Cproductos = () => {
                                 }
                                 type="number"
                                 placeholder="cantidadStock"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">disponible</label>
                             <input
                                 value={cproductoEditado.disponible}
@@ -391,11 +391,11 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="disponible"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
-                        <div className="w-full text-white">
+                        <div className="w-full">
                             <label className="block">proveedor</label>
                             <input
                                 value={cproductoEditado.proveedor}
@@ -407,13 +407,13 @@ const Cproductos = () => {
                                 }
                                 type="text"
                                 placeholder="proveedor"
-                                className="text-black w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
                         </div>
 
 
-                        <div className="ml-1 text-black">
-                            <label className="block text-white">categoria</label>
+                        <div className="ml-1">
+                            <label className="block">categoria</label>
                             <SelectCategoria onChange={(categoriaId) =>
                                 setCproductoEditado({
                                     ...cproductoEditado,
@@ -426,37 +426,36 @@ const Cproductos = () => {
                             />
                         </div>
                         
-                        
-                        </div>
-                        <div className="mb-4 text-white">
+                        <div className="mb-4">
                             <label className="block">Foto</label>
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={(event) => setSelectedFile(event.target.files[0])}
-                                className="text-gray-500 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                             />
-                            <div className="text-gray-500 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white">
+                            <div className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                                 {selectedFile ? (
                                     <div className="flex items-center mt-2">
                                         <img
                                             src={URL.createObjectURL(selectedFile)}
                                             alt="Nueva foto"
-                                            className="flex w-120 h-120 rounded"
+                                            className="w-40 h-40 rounded mr-2"
                                         />
-                                        
+                                        <span className="text-gray-600">Nueva foto seleccionada</span>
                                     </div>
                                 ) : (
                                     <div className="flex items-center mt-2">
                                         <img
                                             src={cproductoEditado.foto}
                                             alt="Foto actual"
-                                            className="w-120 h-120 rounded"
+                                            className="w-40 h-40 rounded mr-2"
                                         />
                                         <span className="text-gray-600">Foto actual</span>
                                     </div>
                                 )}
                             </div>
+                        </div>
                         </div>
                     <div className="flex items-center justify-end mt-6">
                         <button
@@ -464,7 +463,7 @@ const Cproductos = () => {
                             onClick={closeModal}
                             className="mr-2 text-red-800 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                         >
-                            cerrar
+                            Close
                         </button>
                         <button
                             type="button"
@@ -490,16 +489,16 @@ const Cproductos = () => {
 
                 <div class="flex flex-wrap -mx-3">
                     <div class="flex-none w-full max-w-full px-3">
-                        <div class="flex flex-col min-w-0 mb-6 break-words bg-gray-800 border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                        <div class="flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                                <h6 class="dark:text-white font-bold">LISTA DE PROPDUCTOs</h6>
+                                <h6 class="dark:text-white font-bold">Lista De productos</h6>
                             </div>
                             <div class="flex-auto px-0 pt-0 pb-2">
                                 <div class="p-0 overflow-x-auto ps">
 
                                     <nav class=" flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" >
                                         <div class="flex  items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit ">
-                                            <nav className=" flex">
+                                            <nav className=" flex ">
 
                                                 <div class="mb-0 font-bold capitalize m-2">
                                                     <button type="button" className="" onClick={openModal}>

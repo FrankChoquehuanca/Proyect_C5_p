@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Modal from "../component/Modal";
 import AppLayout from "../component/admin/AppLayout";
-const CategoriaProds = () => {
+const ClienteProds = () => {
     // token
     const token = localStorage.getItem("token");
     // end token
@@ -11,14 +11,14 @@ const CategoriaProds = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCategoriaProds, setFilteredCategoriaProds] = useState([]);
+  const [filteredClienteProds, setFilteredClienteProds] = useState([]);
 
   
 
   const getCurrentItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return filteredCategoriaProds.slice(startIndex, endIndex);
+    return filteredClienteProds.slice(startIndex, endIndex);
   };
 
   // end paginacion
@@ -35,99 +35,111 @@ const CategoriaProds = () => {
   // end modal
   const API_URL = "http://localhost:9090";
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [categoriaProds, setCategoriaProds] = useState([]);
+  const [clienteProds, setClienteProds] = useState([]);
   //fracmento de paginacion
-  const totalPages = Math.ceil(categoriaProds.length / itemsPerPage);
+  const totalPages = Math.ceil(clienteProds.length / itemsPerPage);
   const hasNextPage = () => {
-    return currentPage < totalPages && categoriaProds.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).length > 0;
+    return currentPage < totalPages && clienteProds.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).length > 0;
   };
   // end fracmento de paginacion
-  const [categoriaProdEditado, setCategoriaProdEditado] = useState({
+  const [clienteProdEditado, setClienteProdEditado] = useState({
     id: null,
-    titulo: "",
-    descripccion: "",
-    orden: "",
-    etiqueta: "",
-    color: "",
+    nombre: "",
+    apellidopaterno: "",
+    apellidomaterno: "",
+    dni: "",
+    sexo: "",
+    telefono: "",
+    celular: "",
+    direccion: "",
   });
 
-  const getCategoriaProds = () => {
+  const getClienteProds = () => {
     axios
-      .get(`${API_URL}/categoria`,{
+      .get(`${API_URL}/cliente`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        const sortedCategoriaProds = response.data.sort();
-        setCategoriaProds(sortedCategoriaProds.reverse());
-        const filtered = response.data.filter((categoriaProd) => {
-          const tituloCompleto = `${categoriaProd.titulo} ${categoriaProd.orden}${categoriaProd.etiqueta}${categoriaProd.color}`;
+        const sortedClienteProds = response.data.sort();
+        setClienteProds(sortedClienteProds.reverse());
+        const filtered = response.data.filter((clienteProd) => {
+          const tituloCompleto = `${clienteProd.nombre} ${clienteProd.apellidopaterno}${clienteProd.apellidomaterno}${clienteProd.dni}${clienteProd.sexo}${clienteProd.telefono}${clienteProd.celular}`;
           return tituloCompleto.toLowerCase().includes(searchTerm.toLowerCase());
         });
 
-        setFilteredCategoriaProds(filtered);
+        setFilteredClienteProds(filtered);
       })
       .catch((error) => {
-        // handle error
+        // handle error clienteProd.direccion,
         console.log(error);
       });
   }
 
-
-  const editarCategoriaProd = (id) => {
-    const categoriaProd = categoriaProds.find((p) => p.id === id);
-    setCategoriaProdEditado({
-      id: categoriaProd.id,
-      titulo: categoriaProd.titulo,
-      descripccion: categoriaProd.descripccion,
-      orden: categoriaProd.orden,
-      etiqueta: categoriaProd.etiqueta,
-      color: categoriaProd.color,
+  const editarClienteProd = (id) => {
+    const clienteProd = clienteProds.find((p) => p.id === id);
+    setClienteProdEditado({
+      id: clienteProd.id,
+      nombre: clienteProd.nombre,
+      apellidopaterno: clienteProd.apellidopaterno,
+      apellidomaterno: clienteProd.apellidomaterno,
+      dni: clienteProd.dni,
+      sexo: clienteProd.sexo,
+      telefono: clienteProd.telefono,
+      celular: clienteProd.celular,
+      direccion: clienteProd.direccion,
     });
     openModal()
   }
-
-  const crearCategoriaProd = async (event) => {
+  
+  const crearClienteProd = async (event) => {
     event.preventDefault();
-    if (
-      !categoriaProdEditado.titulo.trim() ||
-      !categoriaProdEditado.orden.trim() ||
-      !categoriaProdEditado.descripccion.trim() ||
-      !categoriaProdEditado.etiqueta.trim() ||
-      !categoriaProdEditado.color.trim()
-    ) {
-      return;
+      if (
+          !clienteProdEditado.nombre.trim() ||
+          !clienteProdEditado.apellidopaterno.trim() ||
+          !clienteProdEditado.apellidomaterno.trim() ||
+          !clienteProdEditado.dni.trim() ||
+          !clienteProdEditado.sexo.trim() ||
+          !clienteProdEditado.telefono.trim() ||
+          !clienteProdEditado.celular.trim() ||
+          !clienteProdEditado.direccion.trim()
+      ) {
+          return;
     }
 
     try {
-
-      const nuevoCategoriaProd = {
-        titulo: categoriaProdEditado.titulo,
-        orden: categoriaProdEditado.orden,
-        descripccion: categoriaProdEditado.descripccion,
-        etiqueta: categoriaProdEditado.etiqueta,
-        color: categoriaProdEditado.color,
+      const nuevoClienteProd = {
+        nombre: clienteProdEditado.nombre,
+        apellidopaterno: clienteProdEditado.apellidopaterno,
+        apellidomaterno: clienteProdEditado.apellidomaterno,
+        dni: clienteProdEditado.dni,
+        sexo: clienteProdEditado.sexo,
+        telefono: clienteProdEditado.telefono,
+        celular: clienteProdEditado.celular,
+        direccion: clienteProdEditado.direccion,
       };
 
 
       axios
-        .post(`${API_URL}/categoria`, nuevoCategoriaProd,{
+        .post(`${API_URL}/cliente`, nuevoClienteProd,{
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          setCategoriaProdEditado({
+          setClienteProdEditado({
             id: null,
-            titulo: "",
-            orden: "",
-            descripccion: "",
-            etiqueta: "",
-            color: "",
-
+            nombre: "",
+            apellidopaterno: "",
+            apellidomaterno: "",
+            dni: "",
+            sexo: "",
+            telefono: "",
+            celular: "",
+            direccion: "",
           });
-          getCategoriaProds();
+          getClienteProds();
           closeModal()
         })
         .catch((error) => {
@@ -139,72 +151,78 @@ const CategoriaProds = () => {
   };
 
 
-  const actualizarCategoriaProd = async (event) => {
+  const actualizarClienteProd = async (event) => {
     event.preventDefault();
 
     try {
 
 
-      const categoriaProdActualizado = {
-        id: categoriaProdEditado.id,
-        titulo: categoriaProdEditado.titulo,
-        orden: categoriaProdEditado.orden,
-        descripccion: categoriaProdEditado.descripccion,
-        etiqueta: categoriaProdEditado.etiqueta,
-        color: categoriaProdEditado.color,
+      const clienteProdActualizado = {
+          id: clienteProdEditado.id,
+        nombre: clienteProdEditado.nombre,
+        apellidopaterno: clienteProdEditado.apellidopaterno,
+        apellidomaterno: clienteProdEditado.apellidomaterno,
+        dni: clienteProdEditado.dni,
+        sexo: clienteProdEditado.sexo,
+        telefono: clienteProdEditado.telefono,
+        celular: clienteProdEditado.celular,
+        direccion: clienteProdEditado.direccion,
       };
 
-      // Realizar la solicitud PUT para actualizar el categoriaProd
+      // Realizar la solicitud PUT para actualizar el clienteProd
       const response = await axios.put(
-        `${API_URL}/categoria`,
-        categoriaProdActualizado,{
+        `${API_URL}/cliente`,
+        clienteProdActualizado,{
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Actualizar la lista de categoriaProds
-      getCategoriaProds();
+      // Actualizar la lista de clienteProds
+      getClienteProds();
       closeModal()
-      setCategoriaProdEditado({
+      setClienteProdEditado({
         id: null,
-        titulo: "",
-        orden: "",
-        descripccion: "",
-        etiqueta: "",
-        color: "",
-
+        nombre: "",
+        apellidopaterno: "",
+        apellidomaterno: "",
+        dni: "",
+        sexo: "",
+        telefono: "",
+        celular: "",
+        direccion: "",
+        
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const eliminarCategoriaProd = async (id) => {
+  const eliminarClienteProd = async (id) => {
     try {
-      // Realizar la solicitud DELETE para eliminar el categoriaProd
-      const response = await axios.delete(`${API_URL}/categoria/${id}`,{
+      // Realizar la solicitud DELETE para eliminar el clienteProd
+      const response = await axios.delete(`${API_URL}/cliente/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // Actualizar la lista de categoriaProds
-      getCategoriaProds();
+      // Actualizar la lista de clienteProds
+      getClienteProds();
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getCategoriaProds();
+    getClienteProds();
   }, []);
 
   const contenidoModal = (
 
 
-    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40   shadow-slate-400 shadow-md">
+    <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-slate-400 shadow-md">
       <div className="flex justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -212,87 +230,132 @@ const CategoriaProds = () => {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
         </svg>
       </div>
-      <h2 className="text-2xl font-bold text-center">{categoriaProdEditado.id ? 'Editar CategoriaProd' : 'Crear CategoriaProd'}</h2>
-      <form onSubmit={categoriaProdEditado.id ? actualizarCategoriaProd : crearCategoriaProd}>
+      <h2 className="text-2xl font-bold text-center">{clienteProdEditado.id ? 'Editar ClienteProd' : 'Crear ClienteProd'}</h2>
+      <form onSubmit={clienteProdEditado.id ? actualizarClienteProd : crearClienteProd}>
+        
         <div className="mt-4">
           <div className="flex flex-wrap">
             <div className="w-full">
-              <label className="block">Titulo</label>
+              <label className="block">Nombre</label>
               <input
-                value={categoriaProdEditado.titulo}
+                value={clienteProdEditado.nombre}
                 onChange={(event) =>
-                  setCategoriaProdEditado({
-                    ...categoriaProdEditado,
-                    titulo: event.target.value,
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    nombre: event.target.value,
                   })
                 }
                 type="text"
-                placeholder="Titulo"
+                placeholder="Nombre"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
 
             <div className="ml-1 w-full">
-              <label className="block">orden</label>
+              <label className="block">apellidopaterno</label>
               <input
-                value={categoriaProdEditado.orden}
+                value={clienteProdEditado.apellidopaterno}
                 onChange={(event) =>
-                  setCategoriaProdEditado({
-                    ...categoriaProdEditado,
-                    orden: event.target.value,
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    apellidopaterno: event.target.value,
                   })
                 }
-                type="number"
-                placeholder="orden"
+                type="text"
+                placeholder="apellidopaterno"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
             <div className="ml-1 w-full">
-              <label className="block">Descripcion</label>
+              <label className="block">apellidomaterno</label>
               <input
-                value={categoriaProdEditado.descripccion}
+                value={clienteProdEditado.apellidomaterno}
                 onChange={(event) =>
-                  setCategoriaProdEditado({
-                    ...categoriaProdEditado,
-                    descripccion: event.target.value,
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    apellidomaterno: event.target.value,
                   })
                 }
                 type="text"
-                placeholder="descripccion"
+                placeholder="apellidomaterno"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
             <div className="ml-1 w-full">
-              <label className="block">Etiqueta</label>
+              <label className="block">dni</label>
               <input
-                value={categoriaProdEditado.etiqueta}
+                value={clienteProdEditado.dni}
                 onChange={(event) =>
-                  setCategoriaProdEditado({
-                    ...categoriaProdEditado,
-                    etiqueta: event.target.value,
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    dni: event.target.value,
                   })
                 }
                 type="text"
-                placeholder="etiqueta"
+                placeholder="dni"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
             <div className="ml-1 w-full">
-              <label className="block">color</label>
+              <label className="block">sexo</label>
               <input
-                value={categoriaProdEditado.color}
+                value={clienteProdEditado.sexo}
                 onChange={(event) =>
-                  setCategoriaProdEditado({
-                    ...categoriaProdEditado,
-                    color: event.target.value,
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    sexo: event.target.value,
                   })
                 }
                 type="text"
-                placeholder="color"
+                placeholder="sexo"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
-
+            <div className="ml-1 w-full">
+              <label className="block">telefono</label>
+              <input
+                value={clienteProdEditado.telefono}
+                onChange={(event) =>
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    telefono: event.target.value,
+                  })
+                }
+                type="text"
+                placeholder="telefono"
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+            <div className="ml-1 w-full">
+              <label className="block">celular</label>
+              <input
+                value={clienteProdEditado.celular}
+                onChange={(event) =>
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    celular: event.target.value,
+                  })
+                }
+                type="text"
+                placeholder="celular"
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+            <div className="ml-1 w-full">
+              <label className="block">direccion</label>
+              <input
+                value={clienteProdEditado.direccion}
+                onChange={(event) =>
+                  setClienteProdEditado({
+                    ...clienteProdEditado,
+                    direccion: event.target.value,
+                  })
+                }
+                type="text"
+                placeholder="direccion"
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
             </div>
           <div className="mt-4">
           </div>
@@ -309,10 +372,10 @@ const CategoriaProds = () => {
               type="button"
               className="ml-1 text-blue-700 font-bold inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
             >
-              {categoriaProdEditado.id ? (
-                <button onClick={actualizarCategoriaProd} >Actualizar</button>
+              {clienteProdEditado.id ? (
+                <button onClick={actualizarClienteProd} >Actualizar</button>
               ) : (
-                <button onClick={crearCategoriaProd} >Crear </button>
+                <button onClick={crearClienteProd} >Crear </button>
               )}
             </div>
           </div>
@@ -333,7 +396,7 @@ const CategoriaProds = () => {
           <div class="flex-none w-full max-w-full px-3">
             <div class=" flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                <h6 class="dark:text-white font-bold">Lista De CategoriaProd</h6>
+                <h6 class="dark:text-white font-bold">Lista De ClienteProd</h6>
               </div>
               <div class="flex-auto px-0 pt-0 pb-2">
                 <div class="p-0 overflow-x-auto ps">
@@ -353,7 +416,7 @@ const CategoriaProds = () => {
                         <div class="flex items-center md:ml-auto md:pr-4">
                           <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                             <span class="text-sm ease-soft absolute leading-5.6  z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-                              <button onClick={getCategoriaProds} >
+                              <button onClick={getClienteProds} >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   viewBox="0 0 20 20"
@@ -383,53 +446,72 @@ const CategoriaProds = () => {
                     <thead class="align-bottom">
                       <tr>
                         <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">ID</th>
-                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Titulo</th>
-                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Descripccion</th>
-                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Orden</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">nombre</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">apellidopaterno</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">apellidomaterno</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">dni</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">sexo</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">telefono</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">celular</th>
+                        <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">direccion</th>
                         <th class="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Creado</th>
                         <th class="px-6 py-3  font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Actualizado</th>
                         <th class="px-6 py-3  font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400  "></th>
-                      </tr>
+                      </tr>                                                                                                                                                                                           
                     </thead>
                     <tbody>
-                      {currentItems.map((categoriaProd) => (
-                        <tr key={categoriaProd.id}>
+                      {currentItems.map((clienteProd) => (
+                        <tr key={clienteProd.id}>
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                             <div class="flex px-2 py-1">
                               <div class="flex flex-col justify-center">
                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-500 text-white">
-                                  {categoriaProd.id}
+                                  {clienteProd.id}
                                 </span>
                               </div>
                             </div>
                           </td>
-                      
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{categoriaProd.titulo}</p>
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.nombre}</p>
                           </td>
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{categoriaProd.descripccion}</p>
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.apellidopaterno}</p>
                           </td>
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{categoriaProd.orden}</p>
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.apellidomaterno}</p>
+                          </td>
+                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.dni}</p>
+                          </td>
+                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.sexo}</p>
+                          </td>
+                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.telefono}</p>
+                          </td>
+                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.celular}</p>
+                          </td>
+                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.direccion}</p>
                           </td>
                           <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{categoriaProd.created_at}</span>
+                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.created_at}</span>
                           </td>
                           <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{categoriaProd.updated_at}</span>
+                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.updated_at}</span>
                           </td>
                           <td class=" sticky right-0 p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                             {/* <div class="ml-auto text-right"> */}
                             <div className=" m-1 btns inline-block px-4 py-3 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-150 hover:scale-102 active:opacity-85 bg-x-25" href="javascript:;">
-                              <button onClick={() => eliminarCategoriaProd(categoriaProd.id)} >
+                              <button onClick={() => eliminarClienteProd(clienteProd.id)} >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-400 ">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                 </svg>
                               </button>
                             </div>
                             <a class="btns inline-block px-4 py-3 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-150 hover:scale-102 active:opacity-85 bg-x-25 " href="javascript:;">
-                              <button onClick={() => editarCategoriaProd(categoriaProd.id)} >
+                              <button onClick={() => editarClienteProd(clienteProd.id)} >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-slate-400">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                                 </svg>
@@ -477,4 +559,4 @@ const CategoriaProds = () => {
   );
 }
 
-export default CategoriaProds;
+export default ClienteProds;

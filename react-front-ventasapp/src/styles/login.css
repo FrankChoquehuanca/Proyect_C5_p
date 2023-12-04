@@ -7,7 +7,7 @@ font-family: 'Roboto', sans-serif;
 } */
 
 .bodyy{
-background-image: url(https://demos.creative-tim.com/material-tailwind-dashboard-react/img/pattern.png);
+background-image: url(https://i.pinimg.com/originals/0e/9d/78/0e9d785c21bdf61fd4d86f42495940ac.jpg);
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center;
@@ -35,13 +35,13 @@ display: flex;
 justify-content: center;
 -webkit-backdrop-filter: blur(10px);
 backdrop-filter: blur(10px);
-background-color: rgba(17, 20, 22, 0.5);
+background-color: rgba(0, 128, 255, 0.5);
 
 }
 
 .caja__trasera div{
 margin: 100px 40px;
-color: rgb(221, 206, 206);
+color: white;
 transition: all 500ms;
 
 }
@@ -83,7 +83,7 @@ transition: all 300ms;
 
 .caja__trasera button:hover{
 background: #fff;
-color: #40464d;
+color: #46A2FD;
 }
 
 /*Formularios*/
@@ -129,9 +129,9 @@ outline: none;
 .contenedor__login-register form button{
 padding: 10px 40px;
 margin-top: 40px;
-border-radius: none;
+border: none;
 font-size: 14px;
-background: #3a4046;
+background: #46A2FD;
 font-weight: 600;
 cursor: pointer;
 color: white;
