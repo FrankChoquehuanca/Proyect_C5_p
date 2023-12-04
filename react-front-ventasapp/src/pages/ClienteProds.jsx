@@ -4,9 +4,9 @@ import Modal from "../component/Modal";
 import AppLayout from "../component/admin/AppLayout";
 import backgroundTabla from "../public/images/tablo.jpg";
 const ClienteProds = () => {
-    // token
-    const token = localStorage.getItem("token");
-    // end token
+  // token
+  const token = localStorage.getItem("token");
+  // end token
 
   // paginacion
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +14,7 @@ const ClienteProds = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredClienteProds, setFilteredClienteProds] = useState([]);
 
-  
+
 
   const getCurrentItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -57,7 +57,7 @@ const ClienteProds = () => {
 
   const getClienteProds = () => {
     axios
-      .get(`${API_URL}/cliente`,{
+      .get(`${API_URL}/cliente`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -93,20 +93,20 @@ const ClienteProds = () => {
     });
     openModal()
   }
-  
+
   const crearClienteProd = async (event) => {
     event.preventDefault();
-      if (
-          !clienteProdEditado.nombre.trim() ||
-          !clienteProdEditado.apellidopaterno.trim() ||
-          !clienteProdEditado.apellidomaterno.trim() ||
-          !clienteProdEditado.dni.trim() ||
-          !clienteProdEditado.sexo.trim() ||
-          !clienteProdEditado.telefono.trim() ||
-          !clienteProdEditado.celular.trim() ||
-          !clienteProdEditado.direccion.trim()
-      ) {
-          return;
+    if (
+      !clienteProdEditado.nombre.trim() ||
+      !clienteProdEditado.apellidopaterno.trim() ||
+      !clienteProdEditado.apellidomaterno.trim() ||
+      !clienteProdEditado.dni.trim() ||
+      !clienteProdEditado.sexo.trim() ||
+      !clienteProdEditado.telefono.trim() ||
+      !clienteProdEditado.celular.trim() ||
+      !clienteProdEditado.direccion.trim()
+    ) {
+      return;
     }
 
     try {
@@ -123,7 +123,7 @@ const ClienteProds = () => {
 
 
       axios
-        .post(`${API_URL}/cliente`, nuevoClienteProd,{
+        .post(`${API_URL}/cliente`, nuevoClienteProd, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -159,7 +159,7 @@ const ClienteProds = () => {
 
 
       const clienteProdActualizado = {
-          id: clienteProdEditado.id,
+        id: clienteProdEditado.id,
         nombre: clienteProdEditado.nombre,
         apellidopaterno: clienteProdEditado.apellidopaterno,
         apellidomaterno: clienteProdEditado.apellidomaterno,
@@ -173,11 +173,11 @@ const ClienteProds = () => {
       // Realizar la solicitud PUT para actualizar el clienteProd
       const response = await axios.put(
         `${API_URL}/cliente`,
-        clienteProdActualizado,{
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        clienteProdActualizado, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
 
       // Actualizar la lista de clienteProds
@@ -193,7 +193,7 @@ const ClienteProds = () => {
         telefono: "",
         celular: "",
         direccion: "",
-        
+
       });
     } catch (error) {
       console.log(error);
@@ -203,7 +203,7 @@ const ClienteProds = () => {
   const eliminarClienteProd = async (id) => {
     try {
       // Realizar la solicitud DELETE para eliminar el clienteProd
-      const response = await axios.delete(`${API_URL}/cliente/${id}`,{
+      const response = await axios.delete(`${API_URL}/cliente/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -225,13 +225,13 @@ const ClienteProds = () => {
 
     <div className="px-6 py-6 mx-2 mt-2 mb-2 text-left bg-black bg-opacity-40  shadow-white shadow-md">
       <div className="flex justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 10a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-</svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-20 h-20 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 10a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
       </div>
       <h2 className="text-2xl font-bold text-center">{clienteProdEditado.id ? 'Editar ClienteProd' : 'Crear ClienteProd'}</h2>
       <form onSubmit={clienteProdEditado.id ? actualizarClienteProd : crearClienteProd}>
-        
+
         <div className="mt-4">
           <div className="flex flex-wrap">
             <div className="w-full">
@@ -296,8 +296,8 @@ const ClienteProds = () => {
               />
             </div>
             <div className="ml-1 w-full">
-              <label className="block">sexo</label>
-              <input
+              <label className="block">Sexo</label>
+              <select
                 value={clienteProdEditado.sexo}
                 onChange={(event) =>
                   setClienteProdEditado({
@@ -305,11 +305,13 @@ const ClienteProds = () => {
                     sexo: event.target.value,
                   })
                 }
-                type="text"
-                placeholder="sexo"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-              />
+              >
+                <option value="true">Femenino</option>
+                <option value="false">Masculino</option>
+              </select>
             </div>
+
             <div className="ml-1 w-full">
               <label className="block">telefono</label>
               <input
@@ -355,7 +357,7 @@ const ClienteProds = () => {
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
-            </div>
+          </div>
           <div className="mt-4">
           </div>
           <div className="flex  flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
@@ -394,10 +396,10 @@ const ClienteProds = () => {
         <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
             <div class=" flex flex-col min-w-0 mb-6 break-words border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
-            style={{
-              backgroundImage: `url(${backgroundTabla})`,
-              backgroundSize: "cover", // O ajusta según sea necesario
-            }}>
+              style={{
+                backgroundImage: `url(${backgroundTabla})`,
+                backgroundSize: "cover", // O ajusta según sea necesario
+              }}>
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <h6 class="dark:text-white font-bold">Lista De ClienteProd</h6>
               </div>
@@ -407,7 +409,7 @@ const ClienteProds = () => {
                   <nav class=" flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" >
                     <div class="flex  items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit ">
                       <nav className=" flex ">
-                       
+
                         <div class="mb-0 font-bold capitalize m-2">
 
                           <button type="button" className="" onClick={openModal}>
@@ -460,7 +462,7 @@ const ClienteProds = () => {
                         <th class="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Creado</th>
                         <th class="px-6 py-3  font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400  ">Actualizado</th>
                         <th class="px-6 py-3  font-semibold capitalize align-middle bg-transparent border-b border-collapse border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap text-slate-400  "></th>
-                      </tr>                                                                                                                                                                                           
+                      </tr>
                     </thead>
                     <tbody>
                       {currentItems.map((clienteProd) => (
@@ -486,9 +488,12 @@ const ClienteProds = () => {
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                             <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.dni}</p>
                           </td>
-                          <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.sexo}</p>
-                          </td>
+                          <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+  <p className="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
+    {clienteProd.sexo ? 'Femenino' : 'Masculino'}
+  </p>
+</td>
+
                           <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                             <p class="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">{clienteProd.telefono}</p>
                           </td>
@@ -537,7 +542,7 @@ const ClienteProds = () => {
                       ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        </button>
+                      </button>
                       <span className=" p-2 font-semibold  text-reed-700  inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs uppercase leading-normal shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">{` ${currentPage} DE ${totalPages}`}</span>
                       <button
                         onClick={() => setCurrentPage(currentPage + 1)}
@@ -547,7 +552,7 @@ const ClienteProds = () => {
                       ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        </button>
+                      </button>
                     </div>
                     <div>
                     </div>
